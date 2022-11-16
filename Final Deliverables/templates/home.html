@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Home</title>
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/home.css') }}">
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function (event) {
+            const resultDiv = document.getElementById('resultDiv')
+            const getInfoBtn = document.getElementById('getInfoBtn')
+            const getInform = document.forms[0]
+            getInfoBtn.addEventListener('click', function (e) {
+                e.preventDefault()
+                const options = {
+                    method: 'GET',
+                    headers: {
+                        'X-RapidAPI-Key': '84a69684femsh1e293486e06ba0cp1825d9jsn6aa7c5b37425',
+                        'X-RapidAPI-Host': 'dietagram.p.rapidapi.com'
+                    }
+                };
+                fetch(`https://dietagram.p.rapidapi.com/apiFood.php?name=${getInform["food"].value}`, options)
+                    .then(response => response.json())
+                    .then(response => {
+
+                        if (response.dishes.length > 0) {
+                            resultDiv.innerHTML = `<table class=table>
+                            <tr>
+                                <th>Name</th>
+                                <th>Calories</th>
+                                <th>Protien</th>
+                                <th>Fat</th>
+                                <th>carbon</th>
+                            </tr>`+
+                                response.dishes.map((el) =>
+                                    `<tr>
+                                        <td>${el.name}</td>
+                                        <td>${el.caloric}</td>
+                                        <td>${el.protein}</td>
+                                        <td>${el.fat}</td>
+                                        <td>${el.carbon}</td>
+                                    </tr>`
+                                ).join("") +
+                                `</table>`
+                        }
+                        else {
+                            window.alert("No Information found")
+                        }
+
+
+                    })
+                    .catch(err => window.alert("Maximum api calls reached"));
+            })
+
+            const getMedicinalDetails = document.getElementById('getMedicinalDetails')
+            getMedicinalDetails.addEventListener('click', function (e) {
+                e.preventDefault()
+                const form = document.forms[1]
+                const options = {
+                    method: 'GET',
+                    headers: {
+                        'X-RapidAPI-Key': '84a69684femsh1e293486e06ba0cp1825d9jsn6aa7c5b37425',
+                        'X-RapidAPI-Host': 'drug-info-and-price-history.p.rapidapi.com'
+                    }
+                };
+
+                fetch(`https://drug-info-and-price-history.p.rapidapi.com/1/druginfo?drug=${form["medicine"].value}`, options)
+                    .then(response => response.json())
+                    .then(response => {
+                        if (Array.isArray(response)) {
+                            resultDiv.innerHTML = `<table class=table>
+                            `+
+                                Object.entries(response[0]).map(([key, value]) =>
+                                    (key !== 'packaging' && key !== 'openfda') ?
+                                        `<tr>
+                                        <th>${key}</th>
+                                        <td>${key === "active_ingredients" ? value.map((el) => el.name).join(', ') : value}</td>
+                                    </tr>`: ''
+                                ).join("") +
+                                `</table>`
+                        }
+                        else {
+                            window.alert(response)
+                        }
+                    })
+                    .catch(err => window.alert(err));
+            })
+        });
+
+    </script>
+</head>
+
+<body>
+    <div class="dflex f-row nav">
+        <h3 class="navTitle">Diabetic Retinopathy Classification</h3>
+        <div class="pages">
+            <p class="page active">Home</p>
+            <p class="page"><a href="/login" class="no-decor">Login</a></p>
+            <p class="page"><a href="/register" class="no-decor">Register</a></p>
+        </div>
+    </div>
+    <div class="dflex f-col">
+        <img src="{{ url_for('static',filename='images/retinopathy.webp') }}" alt="retinopathy image" class="image">
+        <div class="dflex f-col desc">
+            <div class="title">
+                <p class="titleText">ABOUT PROJECT</p>
+                <span class="underline"></span>
+            </div>
+            <div class="dflex f-row">
+                <div class="dflex f-col descDiv">
+                    <h3>Problem</h3>
+                    <p class="text">Diabetic Retinopathy (DR) is a common complication of diabetes mellitus, which
+                        causes lesions on
+                        the retina that affect
+                        vision. If it is not detected early, it can lead to blindness. Unfortunately, DR is not a
+                        reversible process, and
+                        treatment only sustains vision. DR early detection and treatment can significantly reduce the
+                        risk of vision loss. The
+                        manual diagnosis process of DR retina fundus images by ophthalmologists is time, effort and
+                        cost-consuming and prone to
+                        misdiagnosis unlike computer-aided diagnosis systems.
+                    </p>
+                </div>
+                <div class="dflex f-col descDiv">
+                    <h3>Solution</h3>
+                    <p class="text">In this project, we eill be building a Transfer learning model that can detect and
+                        classify types of diabetic retinopathy. A web app is integrated with the model from where the
+                        user can upload a Diabetic Retinopathy image like Mild DR, severe DR, etc and see teh analysed
+                        results on User Interface
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</body>
+
+</html>

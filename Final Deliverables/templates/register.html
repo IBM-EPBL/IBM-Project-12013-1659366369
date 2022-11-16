@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Register</title>
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/register.css') }}">
+</head>
+
+<body>
+    <div class="formContainer">
+        <img src="{{ url_for('static',filename='svg/Farmer-512.webp ') }}" alt="profile" class="profile">
+        <form action="{{ url_for('registerUser') }}" method="POST" class="w-90">
+            <input type="text" class="input" placeholder="Enter Name" name="name" id="name">
+            <input type="email" class="input" placeholder="Enter Email" name="email" id="email"
+                >
+            <input type="password" class="input" placeholder="Enter password" name="password" id="password"
+                >
+            <input type="submit" class="input button" value="Register">
+        </form>
+    </div>
+    <p class="text" id="result">
+        {% if pred %}
+        {{ pred }}
+        {% endif %}
+    </p>
+    <p class="text">Already have an account? <a href="/login">Login</a></p>
+</body>
+
+</html>

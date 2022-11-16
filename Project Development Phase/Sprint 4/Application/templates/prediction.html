@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Home</title>
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/home.css') }}">
+</head>
+
+<body>
+    <div class="dflex f-row nav">
+        <h3 class="navTitle">Diabetic Retinopathy Classification</h3>
+        <div class="pages">
+            <p class="page"><a href="/" class="no-decor">Logout</a></p>
+        </div>
+    </div>
+    <div class="dflex f-col al-center">
+        <div class="formContainer">
+            <form action="{{ url_for('predictImage') }}" method="POST" enctype="multipart/form-data">
+                <img src="{{ url_for('static',filename='images/addImage.webp') }}" alt="" class="addImage"
+                    id="imagePreview">
+                <input type="file" accept="image/*" name="image" id="image" class="input">
+                <input type="submit" value="Predict" class="input button">
+            </form>
+        </div>
+        <p class="text" id="result">
+            {% if prediction %}
+            Result = {{ prediction }}
+            {% endif %}
+        </p>
+        <img src="{{ url_for('static',filename='images/classesOfDisease.webp') }}" alt="types of Retinopathy"
+            class="retinopathyTypes">
+    </div>
+
+    <script>
+        const resultContainer = document.getElementById('result')
+        const selectedImg = document.getElementById('imagePreview')
+        const imgInput = document.getElementById('image')
+
+        imgInput.addEventListener('change', function (event) {
+            selectedImg.src = imgInput.value
+            if (event.target.files.length > 0) {
+                let src = URL.createObjectURL(event.target.files[0]);
+                selectedImg.src = src;
+            }
+        })
+    </script>
+</body>
+
+</html>
